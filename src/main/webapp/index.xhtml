@@ -2,14 +2,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Ingresar</title>
     </h:head>
     <h:body>
-        <h1>Factura</h1>
-        <p:spinner/>
-        
+        <p:growl id="mensajes" showDetail="true" life="5000" />
+        <h:form>
+            <p:panel style="width:300px; margin: 0 auto;">
+                <h2 style="text-align: center;">SISTEMA DE FACTURACIÓN</h2>
+                <h:panelGrid columns="1" cellpadding="5">
+                    <h:outputLabel for="username" value="Usuario:" />
+                    <p:inputText value="#{loginBean.username}" id="username"
+                                 style="width: 250px;"
+                                 required="true" label="Usuario" />
+                    <h:outputLabel for="password" value="Password:" />
+                    <p:password value="#{loginBean.password}" id="password"
+                                style="width: 250px;"
+                                required="true" label="Password" />
+                    <p:commandButton id="loginButton" value="Ingresar" style="width: 260px; margin-top: 10px;"
+                                     action="#{loginBean.login}" update=":mensajes" />
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
     </h:body>
 </html>
 
