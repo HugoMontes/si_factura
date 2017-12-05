@@ -53,11 +53,12 @@ public class LoginBean {
         if (username.equals("admin") && password.equals("123456")) {
             context.getExternalContext().getSessionMap().put("user", username);
             view = "backend/factura";
+        }else{
+            String messageType = "error";
+            String messageTitle = "Error de Atutenticación";
+            String messageContent = "Verificar su nombre de usuario y su password.";
+            showMessage(messageType, messageTitle, messageContent);
         }
-        String messageType = "error";
-        String messageTitle = "Error de Atutenticación";
-        String messageContent = "Verificar su nombre de usuario y su password.";
-        showMessage(messageType, messageTitle, messageContent);
         return view;
     }
 

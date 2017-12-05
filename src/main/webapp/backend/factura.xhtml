@@ -5,85 +5,107 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Sistema de Facturación</title>
+        <style>
+            .clear{
+                clear: both;
+            }
+            #header-main{
+                background-color: #505050;
+                height: 60px;
+            }
+            #header-title{
+                font-family: sans-serif;
+                float: left;
+                margin-left: 10px;
+                margin-top: 12px;
+                color: #e8e8e8;
+            }
+            #frm-logout{
+                margin-top: 12px;
+                margin-right: 12px;
+                float: right;
+            }
+        </style>
     </h:head>
     <h:body rendered="#{not empty user}" >
+        <div id="header-main">
+            <h1 id="header-title">SISTEMA DE FACTURACIÓN</h1>
+            <h:form id="frm-logout">
+                <p:commandButton value="Cerrar sesión" action="#{loginBean.logout}" />
+            </h:form>
+            <div class="clear"></div>
+        </div>
         <h:form>
-            <h:commandButton value="Cerrar sesión" action="#{loginBean.logout}" />
-        </h:form>
-        <h1>Factura</h1>
-        <h:form>
-            <p:growl id="msgs" showDetail="true" />
-
             <p:panel id="basic" header="DATOS DE FACTURA" style="margin-bottom:20px">
                 <h:panelGrid columns="4" cellpadding="10">
-                    <h:outputLabel value="Nro Factura:" for="nro"/>
-                    <h:inputText id="nro" value="#{facturaBean.factura.nro}" 
-                                 label="nro" required="true" disabled="true"/>
-                    <h:outputLabel value="Fecha:" for="fecha"/>
-                    <h:inputText id="fecha" value="#{facturaBean.factura.fecha}" 
-                                 label="Fecha" required="true" disabled="true"/>
+                    <h:outputLabel value="Nro Factura:"/>
+                    <h:outputText id="nro" value="0000#{facturaBean.factura.nro}"/>
+                    <h:outputLabel value="Fecha:"/>
+                    <h:outputText id="fecha" value="#{facturaBean.factura.fecha}">
+                        <f:convertDateTime pattern="dd 'de 'MMMM 'de' yyyy" />
+                    </h:outputText>
                     <h:outputLabel value="NIT/CI:" for="nit"/>
-                    <h:inputText id="nit" value="#{facturaBean.factura.nit}" 
-                                 label="NIT/CI" required="true"/>
+                    <p:inputText id="nit" value="#{facturaBean.factura.nit}" 
+                                 label="NIT/CI"/>
                     <h:outputLabel value="Nombre:" for="nombre"/>
-                    <h:inputText id="nombre" value="#{facturaBean.factura.nombre}" 
-                                 label="Nombre" required="true"/>
+                    <p:inputText id="nombre" value="#{facturaBean.factura.nombre}" 
+                                 label="Nombre"/>
                 </h:panelGrid>
             </p:panel>
             <p:panel id="detalle" header="DETALLE" style="margin-bottom:20px">
-
-
                 <h:form>
+                    <p:growl id="growl" life="5000" />
                     <p:fieldset style="margin-bottom:20px">
-                        <h:panelGrid columns="7" cellpadding="5"> 
+                        <h:panelGrid id="pnl-detalle" columns="7" cellpadding="5"> 
                             <h:outputLabel value="Cantidad: " for="cantidad"/>
-                            <h:inputText id="cantidad" value="#{facturaBean.detalle.cantidad}" 
+                            <p:spinner id="cantidad" value="#{facturaBean.detalle.cantidad}" 
                                          label="Cantidad" required="true"/>
                             <h:outputLabel value="Descripcion " for="descripcion"/>
-                            <h:inputText id="descripcion" value="#{facturaBean.producto.nombre}" 
+                            <p:inputText id="descripcion" value="#{facturaBean.detalle.producto.nombre}" 
                                          label="Descripcion" required="true"/>
                             <h:outputLabel value="Precio: " for="precio"/>
-                            <h:inputText id="precio" value="#{facturaBean.producto.precio}" 
-                                         label="Precio" required="true"/>
-                            <p:commandButton value="Adicionar" actionListener="#{facturaBean.adicionarProducto}" styleClass="ui-priority-primary" />
+                            <p:inputNumber id="precio" value="#{facturaBean.detalle.producto.precio}"
+                                           decimalPlaces="2" label="Precio" required="true"/>
+                            <p:commandButton value="Adicionar" icon="ui-icon-plus" styleClass="ui-priority-primary"
+                                             actionListener="#{facturaBean.adicionarProducto}"
+                                             update="growl, tbl-detalles, pnl-detalle"/>
                         </h:panelGrid>
                     </p:fieldset>
+
+                    <p:dataTable id="tbl-detalles" var="detalle" value="#{facturaBean.factura.detalles}">
+                        <p:column headerText="Cantidad" style="width: 90px;">
+                            <h:outputText value="#{detalle.cantidad}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción">
+                            <h:outputText value="#{detalle.producto.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Precio Unitario" style="width: 150px; text-align: right">
+                            <h:outputText value="#{detalle.precio}" />
+                        </p:column>
+
+                        <p:column headerText="Importe" style="width: 150px; text-align: right">
+                            <h:outputText value="#{detalle.precio*detalle.cantidad}" />
+                        </p:column>
+
+                        <p:column headerText="Accion" style="width: 100px;">
+                            <p:commandButton icon="ui-icon-trash" actionListener="#{buttonView.buttonAction}"/>
+                        </p:column>
+
+                        <p:summaryRow>
+                            <p:column colspan="3" style="text-align:right">
+                                <h:outputText value="Total:" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{facturaBean.factura.totalNum}">
+                                    <f:convertNumber type="currency" currencySymbol="Bs." />
+                                </h:outputText>
+                            </p:column>
+                        </p:summaryRow>
+                    </p:dataTable>
                 </h:form>
-
-
-                <p:dataTable var="detalle" value="#{facturaBean.factura.detalles}">
-                    <p:column headerText="Cantidad">
-                        <h:outputText value="#{detalle.cantidad}" />
-                    </p:column>
-
-                    <p:column headerText="Descripción">
-                        <h:outputText value="#{detalle.producto.nombre}" />
-                    </p:column>
-
-                    <p:column headerText="Precio Unitario">
-                        <h:outputText value="#{detalle.precio}" />
-                    </p:column>
-
-                    <p:column headerText="Importe">
-                        <h:outputText value="#{detalle.precio}" />
-                    </p:column>
-                    
-                    <p:column headerText="Accion">
-                        <p:commandButton icon="ui-icon-trash" actionListener="#{buttonView.buttonAction}"/>
-                    </p:column>
-
-                    <p:summaryRow>
-                        <p:column colspan="3" style="text-align:right">
-                            <h:outputText value="Total:" />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{facturaBean.factura.totalNum}">
-                                <f:convertNumber type="currency" currencySymbol="Bs." />
-                            </h:outputText>
-                        </p:column>
-                    </p:summaryRow>
-                </p:dataTable>
                 <div style="text-align: right; margin-top: 20px;">
                     <p:commandButton value="Cobrar/Guardar" actionListener="#{buttonView.buttonAction}"/>
                     <p:commandButton value="Salir" actionListener="#{buttonView.buttonAction}" styleClass="ui-priority-primary" />

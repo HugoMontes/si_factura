@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.montes.bo;
+package com.montes.bo.impl;
 
 /**
  *
  * @author MONTES
  */
-public class FacturaBo {
+public class FacturaBoImpl {
     
 }
