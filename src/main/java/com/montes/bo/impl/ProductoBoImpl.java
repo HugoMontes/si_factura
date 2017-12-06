@@ -24,5 +24,10 @@ public class ProductoBoImpl implements ProductoBo{
     public List<Producto> getAll() {
         return productoDao.getAll();
     }
+
+    @Override
+    public Producto getById(int id) {
+        return productoDao.find(id);
+    }
     
 }

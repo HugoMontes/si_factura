@@ -10,7 +10,9 @@ import com.montes.model.Detalle;
 import com.montes.model.Factura;
 import com.montes.model.Producto;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -77,6 +79,22 @@ public class FacturaBean implements Serializable{
 
     public void setProducto(Producto producto) {
         this.producto = producto;
+    }
+    
+    public List<Producto> completeProducto(String query) {
+        //List<Producto> allProductos = service.getProductos();
+        List<Producto> productos = new ArrayList<Producto>();
+        for (com.montes.persistence.entity.Producto p: productoBo.getAll()) {
+            if(p.getNombre().toLowerCase().startsWith(query)) {
+                Producto prod=new Producto();
+                prod.setId(p.getId());
+                prod.setNombre(p.getNombre());
+                prod.setPrecio(p.getPrecio());
+                productos.add(prod);
+            }
+        }
+         
+        return productos;
     }
     
     public void adicionarProducto(ActionEvent actionEvent){

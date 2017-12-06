@@ -45,10 +45,10 @@
                     <h:outputText id="fecha" value="#{facturaBean.factura.fecha}">
                         <f:convertDateTime pattern="dd 'de 'MMMM 'de' yyyy" />
                     </h:outputText>
-                    <h:outputLabel value="NIT/CI:" for="nit"/>
+                    <p:outputLabel value="NIT/CI:" for="nit"/>
                     <p:inputText id="nit" value="#{facturaBean.factura.nit}" 
                                  label="NIT/CI"/>
-                    <h:outputLabel value="Nombre:" for="nombre"/>
+                    <p:outputLabel value="Nombre:" for="nombre"/>
                     <p:inputText id="nombre" value="#{facturaBean.factura.nombre}" 
                                  label="Nombre"/>
                 </h:panelGrid>
@@ -58,13 +58,21 @@
                     <p:growl id="growl" life="5000" />
                     <p:fieldset style="margin-bottom:20px">
                         <h:panelGrid id="pnl-detalle" columns="7" cellpadding="5"> 
-                            <h:outputLabel value="Cantidad: " for="cantidad"/>
+                            <p:outputLabel value="Cantidad:" for="cantidad"/>
                             <p:spinner id="cantidad" value="#{facturaBean.detalle.cantidad}" 
-                                         label="Cantidad" required="true"/>
-                            <h:outputLabel value="Descripcion " for="descripcion"/>
-                            <p:inputText id="descripcion" value="#{facturaBean.detalle.producto.nombre}" 
-                                         label="Descripcion" required="true"/>
-                            <h:outputLabel value="Precio: " for="precio"/>
+                                       label="Cantidad" required="true"/>
+
+                            <p:outputLabel value="Descripcion:" for="descripcion" />
+                            <p:autoComplete id="descripcion" value="#{facturaBean.detalle.producto}" 
+                                            completeMethod="#{facturaBean.completeProducto}"
+                                            var="producto" 
+                                            itemLabel="#{producto.nombre}" 
+                                            itemValue="#{producto}" 
+                                            converter="productoConverter" 
+                                            forceSelection="true"
+                                            required="true"/>
+
+                            <p:outputLabel value="Precio:" for="precio"/>
                             <p:inputNumber id="precio" value="#{facturaBean.detalle.producto.precio}"
                                            decimalPlaces="2" label="Precio" required="true"/>
                             <p:commandButton value="Adicionar" icon="ui-icon-plus" styleClass="ui-priority-primary"

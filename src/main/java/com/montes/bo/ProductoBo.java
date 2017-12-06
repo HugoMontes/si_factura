@@ -15,5 +15,6 @@ import javax.ejb.Local;
  */
 @Local
 public interface ProductoBo {
-    public List<Producto> getAll(); 
+    public List<Producto> getAll();
+    public Producto getById(int id);
 }

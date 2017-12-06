@@ -86,6 +86,10 @@ public class Producto {
     public void setDetalles(Set<Detalle> detalles) {
         this.detalles = detalles;
     }
-     
+
+    @Override
+    public String toString() {
+        return nombre;
+    }     
      
 }
