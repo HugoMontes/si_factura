@@ -21,6 +21,7 @@ import javax.inject.Named;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
+import org.primefaces.event.FlowEvent;
 
 /**
  *
@@ -36,6 +37,7 @@ public class FacturaBean implements Serializable{
     
     private double importe;
     private double totalImporte ;
+    private boolean next;
     
     @EJB
     private ProductoBo productoBo;
@@ -49,7 +51,9 @@ public class FacturaBean implements Serializable{
         importe=0;
         totalImporte=0;
         this.detalle=new Detalle();
-        this.detalle.setProducto(new Producto());
+        producto=new Producto();
+        producto.setNombre("");
+        this.detalle.setProducto(producto);
         // this.factura.getDetalles().add(new Detalle(new Producto("Mango",Double.parseDouble("15")), 5, Double.parseDouble("150"), null, null));
     }
     
@@ -109,6 +113,16 @@ public class FacturaBean implements Serializable{
     public void setImporte(double importe) {
         this.importe = importe;
     }
+
+    public boolean isNext() {
+        return next;
+    }
+
+    public void setNext(boolean next) {
+        this.next = next;
+    }
+    
+
     
     
            
@@ -129,22 +143,57 @@ public class FacturaBean implements Serializable{
     }
     
     public void adicionarProducto(ActionEvent actionEvent){
-        detalle.setPrecio(detalle.getProducto().getPrecio());
-        totalImporte+=detalle.getPrecio()*detalle.getCantidad();
+        if(detalle.getCantidad()!=null && detalle.getCantidad()!=0 && detalle.getProducto()!=null){
+            detalle.setPrecio(detalle.getProducto().getPrecio());
+            totalImporte+=detalle.getPrecio()*detalle.getCantidad();
+
+            factura.getDetalles().add(detalle);
+            // Inicializar formulario
+            detalle=new Detalle();
+            detalle.setProducto(new Producto());
+            // Mostrar mensaje
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Producto agregado exitosamente.",  null);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }else{
+            // Mostrar mensaje
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Los campos Cantidad y Descripcion son obligatorios.",  null);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
     
-        factura.getDetalles().add(detalle);
-        // Inicializar formulario
-        detalle=new Detalle();
-        detalle.setProducto(new Producto());
-        // Mostrar mensaje
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Producto agregado exitosamente.",  null);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+    public String onFlowProcess(FlowEvent event) {
+        String tabId= event.getNewStep();
+        next=true;
+        if(tabId.equals("reporte")){
+            if(factura.getNit()==null || factura.getNit().equals("")){
+                next=false;
+                // Mostrar mensaje
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "El campo NIT/CI es obligatorio.",  null);
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+            if(factura.getNombre()==null || factura.getNombre().equals("")){
+                next=false;
+                // Mostrar mensaje
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "El campo Nombre es obligatorio.",  null);
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+            if(factura.getDetalles()==null || factura.getDetalles().size()==0){
+                next=false;
+                // Mostrar mensaje
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Debe ingresar al menos un producto en Detalle.",  null);
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+        }
+        if(next){
+            return event.getNewStep();
+        }else{
+            return event.getOldStep();
+        }
     }
     
     public void guardar(ActionEvent actionEvent){
         // Mostrar mensaje
-        // FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Facturado exitosamente.",  null);
-        // FacesContext.getCurrentInstance().addMessage(null, message);
-        System.out.println("FACTURADO Y GUARDADO.....................................");   
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Facturado exitosamente.",  null);
+        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 }

@@ -47,7 +47,8 @@ public class ProductoConverter implements Converter {
                 prod.setPrecio(prodEntity.getPrecio());
                 return prod;
             } catch (NumberFormatException e) {
-                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Not a valid producto."));
+                // throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Not a valid producto."));
+                return new Producto();
             }
         } else {
             return null;
