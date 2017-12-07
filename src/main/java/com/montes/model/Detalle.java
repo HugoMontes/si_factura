@@ -5,13 +5,14 @@
  */
 package com.montes.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author MONTES
  */
-public class Detalle {
+public class Detalle implements Serializable{
 
     private Integer id;
     private Factura factura;

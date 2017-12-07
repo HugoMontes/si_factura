@@ -26,6 +26,11 @@
                 margin-right: 12px;
                 float: right;
             }
+            .precio {
+                width: 100px;
+                /*border: 1px solid #505050;*/
+                font-size: 20px;
+            }
         </style>
     </h:head>
     <h:body rendered="#{not empty user}" >
@@ -53,11 +58,11 @@
                                  label="Nombre"/>
                 </h:panelGrid>
             </p:panel>
-            <p:panel id="detalle" header="DETALLE" style="margin-bottom:20px">
+            <p:panel id="detalle" header="DETALLE" style="margin-bottom:20px;">
                 <h:form>
                     <p:growl id="growl" life="5000" />
                     <p:fieldset style="margin-bottom:20px">
-                        <h:panelGrid id="pnl-detalle" columns="7" cellpadding="5"> 
+                        <h:panelGrid id="pnl-detalle" columns="7" cellpadding="5" columnClasses=" , , , , , precio, "> 
                             <p:outputLabel value="Cantidad:" for="cantidad"/>
                             <p:spinner id="cantidad" value="#{facturaBean.detalle.cantidad}" 
                                        label="Cantidad" required="true"/>
@@ -70,11 +75,11 @@
                                             itemValue="#{producto}" 
                                             converter="productoConverter" 
                                             forceSelection="true"
-                                            required="true"/>
-
-                            <p:outputLabel value="Precio:" for="precio"/>
-                            <p:inputNumber id="precio" value="#{facturaBean.detalle.producto.precio}"
-                                           decimalPlaces="2" label="Precio" required="true"/>
+                                            required="true">
+                                <p:ajax event="itemSelect" update="precio"/>
+                            </p:autoComplete>
+                            <h:outputText value="Precio:"/>
+                            <h:outputText id="precio" value="#{facturaBean.detalle.producto.precio}"/>
                             <p:commandButton value="Adicionar" icon="ui-icon-plus" styleClass="ui-priority-primary"
                                              actionListener="#{facturaBean.adicionarProducto}"
                                              update="growl, tbl-detalles, pnl-detalle"/>
