@@ -5,6 +5,7 @@
  */
 package com.montes.controller;
 
+import com.montes.bo.FacturaBo;
 import com.montes.bo.ProductoBo;
 import com.montes.model.Detalle;
 import com.montes.model.Factura;
@@ -41,6 +42,9 @@ public class FacturaBean implements Serializable{
     
     @EJB
     private ProductoBo productoBo;
+    
+    @EJB
+    private FacturaBo facturaBo;
     /**
      * Creates a new instance of FacturaBean
      */
@@ -185,6 +189,7 @@ public class FacturaBean implements Serializable{
             }
         }
         if(next){
+            factura.setTotalNum(totalImporte);
             return event.getNewStep();
         }else{
             return event.getOldStep();
@@ -192,6 +197,8 @@ public class FacturaBean implements Serializable{
     }
     
     public void guardar(ActionEvent actionEvent){
+        facturaBo.save(factura);
+        
         // Mostrar mensaje
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Facturado exitosamente.",  null);
         FacesContext.getCurrentInstance().addMessage(null, message);

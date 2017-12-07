@@ -5,6 +5,7 @@ package com.montes.persistence.entity;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -160,7 +161,7 @@ public class Factura  implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="factura")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="factura", cascade = CascadeType.ALL)
     public Set<Detalle> getDetalles() {
         return this.detalles;
     }

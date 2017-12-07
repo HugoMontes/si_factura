@@ -7,13 +7,9 @@ package com.montes.controller.converter;
 
 import com.montes.bo.ProductoBo;
 import com.montes.model.Producto;
-import com.montes.persistence.dao.ProductoDao;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -38,9 +34,9 @@ public class ProductoConverter implements Converter {
         if (value != null && value.trim().length() > 0) {
             try {
                 //return service.getProductos().get(Integer.parseInt(value));
-                //com.montes.persistence.entity.Producto prodEntity=service.getById(Integer.parseInt(value));
-                ProductoDao service = new ProductoDao();
-                com.montes.persistence.entity.Producto prodEntity = service.find(Integer.parseInt(value));
+                com.montes.persistence.entity.Producto prodEntity=service.getById(Integer.parseInt(value));
+                //ProductoDao service = new ProductoDao();
+                //com.montes.persistence.entity.Producto prodEntity = service.find(Integer.parseInt(value));
                 Producto prod = new Producto();
                 prod.setId(prodEntity.getId());
                 prod.setNombre(prodEntity.getNombre());
