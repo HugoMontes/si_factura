@@ -34,6 +34,9 @@ public class FacturaBean implements Serializable{
     private Detalle detalle;
     private Producto producto;
     
+    private double importe;
+    private double totalImporte ;
+    
     @EJB
     private ProductoBo productoBo;
     /**
@@ -43,9 +46,11 @@ public class FacturaBean implements Serializable{
         this.factura = new Factura();
         this.factura.setNro((int)(Math.random()*1000));
         this.factura.setFecha(new Date());
+        importe=0;
+        totalImporte=0;
         this.detalle=new Detalle();
         this.detalle.setProducto(new Producto());
-        this.factura.getDetalles().add(new Detalle(new Producto("Mango",Double.parseDouble("15")), 5, Double.parseDouble("150"), null, null));
+        // this.factura.getDetalles().add(new Detalle(new Producto("Mango",Double.parseDouble("15")), 5, Double.parseDouble("150"), null, null));
     }
     
     @PostConstruct
@@ -80,7 +85,33 @@ public class FacturaBean implements Serializable{
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
+
+    public double getTotalImporte() {
+        return totalImporte;
+    }
+
+    public void setTotalImporte(double totalImporte) {
+        this.totalImporte = totalImporte;
+    }
+
+    public ProductoBo getProductoBo() {
+        return productoBo;
+    }
+
+    public void setProductoBo(ProductoBo productoBo) {
+        this.productoBo = productoBo;
+    }
+
+    public double getImporte() {
+        return importe;
+    }
+
+    public void setImporte(double importe) {
+        this.importe = importe;
+    }
     
+    
+           
     public List<Producto> completeProducto(String query) {
         //List<Producto> allProductos = service.getProductos();
         List<Producto> productos = new ArrayList<Producto>();
@@ -99,10 +130,21 @@ public class FacturaBean implements Serializable{
     
     public void adicionarProducto(ActionEvent actionEvent){
         detalle.setPrecio(detalle.getProducto().getPrecio());
+        totalImporte+=detalle.getPrecio()*detalle.getCantidad();
+    
         factura.getDetalles().add(detalle);
+        // Inicializar formulario
         detalle=new Detalle();
         detalle.setProducto(new Producto());
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Productor agregado exitosamente.",  null);
+        // Mostrar mensaje
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Producto agregado exitosamente.",  null);
         FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    
+    public void guardar(ActionEvent actionEvent){
+        // Mostrar mensaje
+        // FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Facturado exitosamente.",  null);
+        // FacesContext.getCurrentInstance().addMessage(null, message);
+        System.out.println("FACTURADO Y GUARDADO.....................................");   
     }
 }

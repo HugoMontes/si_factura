@@ -23,6 +23,7 @@ public class Detalle implements Serializable{
     private Date updatedAt;
 
     public Detalle() {
+        producto=new Producto();
     }
 
     public Detalle(Producto producto, Integer cantidad, Double precio, Date createdAt, Date updatedAt) {
