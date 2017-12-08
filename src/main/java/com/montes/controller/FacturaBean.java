@@ -198,7 +198,6 @@ public class FacturaBean implements Serializable{
     
     public void guardar(ActionEvent actionEvent){
         facturaBo.save(factura);
-        
         // Mostrar mensaje
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Facturado exitosamente.",  null);
         FacesContext.getCurrentInstance().addMessage(null, message);
